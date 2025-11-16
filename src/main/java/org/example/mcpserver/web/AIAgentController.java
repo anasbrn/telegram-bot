@@ -1,5 +1,6 @@
 package org.example.mcpserver.web;
 
+import org.example.mcpserver.tools.AITools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
@@ -14,11 +15,12 @@ import reactor.core.publisher.Flux;
 public class AIAgentController {
     private final ChatClient chatClient;
 
-    public AIAgentController(ChatClient.Builder builder, ChatMemory memory) {
+    public AIAgentController(ChatClient.Builder builder, ChatMemory memory, AITools aiTools) {
         this.chatClient = builder
                 .defaultAdvisors(
                         MessageChatMemoryAdvisor.builder(memory).build()
                 )
+                .defaultTools(aiTools)
                 .build();
     }
 
