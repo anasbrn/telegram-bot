@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.*;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.api.methods.ActionType;
+import org.telegram.telegrambots.meta.api.methods.send.SendChatAction;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
@@ -65,6 +67,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void sendTextMessage(String chatId, String messageText) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
+        sendActionType(chatId);
         // reponse from our aiAgent
         sendMessage.setText(aiAgentController.askAgent(messageText));
         try {
@@ -74,17 +77,21 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    private void sendActionType(String chatId) {
+        try {
+            SendChatAction sendChatAction = new SendChatAction();
+            sendChatAction.setChatId(chatId);
+            sendChatAction.setAction(ActionType.TYPING);
+            execute(sendChatAction);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @PostConstruct
     private void startBot() throws TelegramApiException {
         TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
         botsApi.registerBot(this);
         System.out.println("Bot started!");
     }
-
-//    @Override
-//    public void onRegister() {
-//        super.onRegister();
-//    }
-
-
 }
