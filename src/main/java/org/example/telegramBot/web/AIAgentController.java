@@ -1,4 +1,4 @@
-package org.example.mcpserver.web;
+package org.example.telegramBot.web;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Flux;
 
 import java.util.Arrays;
 
@@ -31,11 +30,11 @@ public class AIAgentController {
     }
 
     @GetMapping("/ask")
-    public Flux<String> askAgent(@RequestParam(name = "question") String question) {
+    public String askAgent(@RequestParam(name = "question") String question) {
         return chatClient
                 .prompt()
                 .user(question)
-                .stream()
+                .call()
                 .content();
     }
 }

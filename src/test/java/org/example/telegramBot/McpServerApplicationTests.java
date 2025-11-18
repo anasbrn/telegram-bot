@@ -1,4 +1,4 @@
-package org.example.mcpserver;
+package org.example.telegramBot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
